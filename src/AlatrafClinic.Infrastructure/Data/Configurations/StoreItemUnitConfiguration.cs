@@ -24,20 +24,21 @@ public class StoreItemUnitConfiguration : IEntityTypeConfiguration<StoreItemUnit
                .HasPrecision(18, 3);
 
         // Audit properties
-        builder.Property(x => x.CreatedAtUtc)
-               .IsRequired();
-
-        builder.Property(x => x.CreatedBy)
-               .HasMaxLength(200);
-
+        builder.Property(x => x.CreatedAtUtc).IsRequired();
+        builder.Property(x => x.CreatedBy).HasMaxLength(200);
         builder.Property(x => x.LastModifiedUtc);
-        builder.Property(x => x.LastModifiedBy)
-               .HasMaxLength(200);
+        builder.Property(x => x.LastModifiedBy).HasMaxLength(200);
 
         // Foreign key to ItemUnit
         builder.HasOne(x => x.ItemUnit)
                .WithMany()
                .HasForeignKey(x => x.ItemUnitId)
                .OnDelete(DeleteBehavior.Restrict);
+
+        // Relationship with Store (inverse of HasMany in StoreConfiguration)
+        builder.HasOne(x => x.Store)
+               .WithMany(x => x.StoreItemUnits)
+               .HasForeignKey(x => x.StoreId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }

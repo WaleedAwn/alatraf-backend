@@ -128,10 +128,11 @@ public class AlatrafClinicDbContext
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(typeof(AlatrafClinicDbContext).Assembly);
         AlatrafClinicDbContextInitializer.Seed(builder);
-        builder.Ignore<StoreItemUnit>(); // To be implemented later
-        builder.Ignore<Store>(); // To be implemented later
+        builder.Ignore<DoctorSectionRoom>(); // To be implemented later
+        builder.Ignore<OrderItem>(); // To be implemented later
         builder.Ignore<ExchangeOrderItem>(); // To be implemented later
         builder.Ignore<ExchangeOrder>(); // To be implemented later
+        builder.Ignore<PurchaseItem>(); // To be implemented later
                 
     }
 

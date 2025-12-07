@@ -18,44 +18,18 @@ public class StoreConfiguration : IEntityTypeConfiguration<Store>
                .HasMaxLength(255);
 
         // Audit properties
-        builder.Property(x => x.CreatedAtUtc)
-               .IsRequired();
-
-        builder.Property(x => x.CreatedBy)
-               .HasMaxLength(200);
-
+        builder.Property(x => x.CreatedAtUtc).IsRequired();
+        builder.Property(x => x.CreatedBy).HasMaxLength(200);
         builder.Property(x => x.LastModifiedUtc);
-        builder.Property(x => x.LastModifiedBy)
-               .HasMaxLength(200);
+        builder.Property(x => x.LastModifiedBy).HasMaxLength(200);
 
-        // Owned collection: StoreItemUnits
-        builder.OwnsMany(x => x.StoreItemUnits, siu =>
-        {
-            siu.ToTable("StoreItemUnits");
-            siu.WithOwner().HasForeignKey("StoreId");
+        // FIXED: StoreItemUnits is NOT an owned type – it's a true entity
+        builder.HasMany(x => x.StoreItemUnits)
+               .WithOne(x => x.Store)
+               .HasForeignKey(x => x.StoreId)
+               .OnDelete(DeleteBehavior.Cascade);
 
-            siu.HasKey(s => s.Id);
-            siu.Property(s => s.Id).ValueGeneratedOnAdd();
-
-            siu.Property(s => s.StoreId).IsRequired();
-            siu.Property(s => s.ItemUnitId).IsRequired();
-
-            siu.Property(s => s.Quantity)
-               .IsRequired()
-               .HasPrecision(18, 3);
-
-            siu.Property(s => s.CreatedAtUtc).IsRequired();
-            siu.Property(s => s.CreatedBy).HasMaxLength(200);
-            siu.Property(s => s.LastModifiedUtc);
-            siu.Property(s => s.LastModifiedBy).HasMaxLength(200);
-
-            // Foreign key to ItemUnit (external reference, not owned)
-            siu.HasOne(s => s.ItemUnit)
-               .WithMany()
-               .HasForeignKey(s => s.ItemUnitId)
-               .OnDelete(DeleteBehavior.Restrict);
-        });
-
-        builder.Navigation(x => x.StoreItemUnits).AutoInclude(false);
+        builder.Navigation(x => x.StoreItemUnits)
+               .AutoInclude(false);
     }
 }

@@ -14,12 +14,25 @@ public class ItemUnitConfiguration : IEntityTypeConfiguration<ItemUnit>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
+        // Foreign key to Item
         builder.Property(x => x.ItemId)
                .IsRequired();
 
+        builder.HasOne(x => x.Item)
+               .WithMany(i => i.ItemUnits)
+               .HasForeignKey(x => x.ItemId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+        // Foreign key to Unit
         builder.Property(x => x.UnitId)
                .IsRequired();
 
+        builder.HasOne(x => x.Unit)
+               .WithMany(u => u.ItemUnits)
+               .HasForeignKey(x => x.UnitId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+        // Pricing
         builder.Property(x => x.Price)
                .IsRequired()
                .HasPrecision(18, 3);
@@ -35,7 +48,7 @@ public class ItemUnitConfiguration : IEntityTypeConfiguration<ItemUnit>
                .HasDefaultValue(1)
                .HasPrecision(18, 3);
 
-        // Audit properties
+        // Audit fields
         builder.Property(x => x.CreatedAtUtc)
                .IsRequired();
 
@@ -43,13 +56,8 @@ public class ItemUnitConfiguration : IEntityTypeConfiguration<ItemUnit>
                .HasMaxLength(200);
 
         builder.Property(x => x.LastModifiedUtc);
+
         builder.Property(x => x.LastModifiedBy)
                .HasMaxLength(200);
-
-        // Foreign key to Unit
-        builder.HasOne(x => x.Unit)
-               .WithMany(u => u.ItemUnits)
-               .HasForeignKey(x => x.UnitId)
-               .OnDelete(DeleteBehavior.Restrict);
     }
 }
