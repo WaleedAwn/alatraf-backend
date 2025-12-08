@@ -70,8 +70,9 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, R
         await _unitOfWork.SaveChangesAsync(ct);
        await _cache.RemoveByTagAsync("ticket");
         
+        await _cache.RemoveByTagAsync("ticket", ct);
         _logger.LogInformation("Ticket with Id {TicketId} created successfully.", ticket.Id);
-
+        
         return ticket.ToDto();
     }
 }
