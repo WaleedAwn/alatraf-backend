@@ -10,7 +10,7 @@ public class CreatePatientRequest
     public string Fullname { get; set; } = default!;
 
     [Required(ErrorMessage ="Birthdate is required")]
-    public DateTime Birthdate { get; set; }
+    public DateTime Birthdate { get; set; }=default!;
     
     [Required(ErrorMessage = "Phone number is required")]
     [RegularExpression(@"^(77|78|73|71)\d{7}$", ErrorMessage = "Phone number must start with 77, 78, 73, or 71 and be 9 digits long.")]
