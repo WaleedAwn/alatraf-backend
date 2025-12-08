@@ -68,6 +68,7 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, R
         
         await _unitOfWork.Tickets.AddAsync(ticket, ct);
         await _unitOfWork.SaveChangesAsync(ct);
+       await _cache.RemoveByTagAsync("ticket");
         
         _logger.LogInformation("Ticket with Id {TicketId} created successfully.", ticket.Id);
 
