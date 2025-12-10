@@ -8,8 +8,6 @@ using MechanicShop.Application.Common.Errors;
 
 using MediatR;
 
-using Microsoft.EntityFrameworkCore;
-
 namespace AlatrafClinic.Application.Features.Patients.Queries.GetPatientById;
 
 public class GetPatientByIdQueryHandler(
@@ -20,7 +18,7 @@ public class GetPatientByIdQueryHandler(
 
     public async Task<Result<PatientDto>> Handle(GetPatientByIdQuery query, CancellationToken ct)
     {
-        var patient = await _context.Patients.Include(p=> p.Person).FirstOrDefaultAsync(p=> p.Id == query.PatientId, ct);
+        var patient = await _context.Patients.FindAsync(new object[] { query.PatientId }, ct);
         if (patient is null)
         {
             return ApplicationErrors.PatientNotFound;
