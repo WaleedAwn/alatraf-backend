@@ -15,10 +15,7 @@ using AlatrafClinic.Domain.Inventory.ExchangeOrders;
 using AlatrafClinic.Domain.Inventory.Items;
 using AlatrafClinic.Domain.Inventory.Purchases;
 using AlatrafClinic.Domain.Inventory.Stores;
-<<<<<<< HEAD
 using AlatrafClinic.Domain.Inventory.Suppliers;
-=======
->>>>>>> upstream/controllers
 using AlatrafClinic.Domain.Inventory.Units;
 using AlatrafClinic.Domain.Patients;
 using AlatrafClinic.Domain.Payments;
@@ -109,7 +106,6 @@ public class AlatrafClinicDbContext
 
     public DbSet<AppSetting> AppSettings => Set<AppSetting>();
 
-<<<<<<< HEAD
     // Inventory entities
     public DbSet<Item> Items => Set<Item>();
     public DbSet<ItemUnit> ItemUnits => Set<ItemUnit>();
@@ -122,9 +118,6 @@ public class AlatrafClinicDbContext
     public DbSet<PurchaseItem> PurchaseItems => Set<PurchaseItem>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
 
-=======
-    public DbSet<Unit> Units => Set<Unit>();
->>>>>>> upstream/controllers
 
     public AlatrafClinicDbContext(DbContextOptions<AlatrafClinicDbContext> options)
         : base(options)
