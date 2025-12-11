@@ -1,5 +1,6 @@
 using AlatrafClinic.Domain.Inventory.Items;
 using AlatrafClinic.Domain.Inventory.Units;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,18 +15,19 @@ public class ItemUnitConfiguration : IEntityTypeConfiguration<ItemUnit>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-        // Foreign key to Item
-        builder.Property(x => x.ItemId)
-               .IsRequired();
+        // Foreign keys
+        builder.Property(x => x.ItemId).IsRequired();
+        builder.Property(x => x.UnitId).IsRequired();
 
-        builder.HasOne(x => x.Item)
+        builder.HasOne(iu => iu.Item)
                .WithMany(i => i.ItemUnits)
-               .HasForeignKey(x => x.ItemId)
+               .HasForeignKey(iu => iu.ItemId)
                .OnDelete(DeleteBehavior.Cascade);
 
-        // Foreign key to Unit
-        builder.Property(x => x.UnitId)
-               .IsRequired();
+        builder.HasOne(iu => iu.Unit)
+               .WithMany(u => u.ItemUnits)
+               .HasForeignKey(iu => iu.UnitId)
+               .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.Unit)
                .WithMany(u => u.ItemUnits)
@@ -48,16 +50,10 @@ public class ItemUnitConfiguration : IEntityTypeConfiguration<ItemUnit>
                .HasDefaultValue(1)
                .HasPrecision(18, 3);
 
-        // Audit fields
-        builder.Property(x => x.CreatedAtUtc)
-               .IsRequired();
-
-        builder.Property(x => x.CreatedBy)
-               .HasMaxLength(200);
-
-        builder.Property(x => x.LastModifiedUtc);
-
-        builder.Property(x => x.LastModifiedBy)
-               .HasMaxLength(200);
+        // // Audit
+        // builder.Property(x => x.CreatedAtUtc).IsRequired();
+        // builder.Property(x => x.CreatedBy).HasMaxLength(200);
+        // builder.Property(x => x.LastModifiedUtc);
+        // builder.Property(x => x.LastModifiedBy).HasMaxLength(200);
     }
 }

@@ -8,7 +8,7 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
 {
     public void Configure(EntityTypeBuilder<Item> builder)
     {
-        builder.ToTable("Items");
+         builder.ToTable("Items");
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
@@ -26,31 +26,23 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
         builder.Property(x => x.BaseUnitId)
                .IsRequired();
 
-        // Audit properties
-        builder.Property(x => x.CreatedAtUtc)
-               .IsRequired();
+        // // Audit
+        // builder.Property(x => x.CreatedAtUtc).IsRequired();
+        // builder.Property(x => x.CreatedBy).HasMaxLength(200);
+        // builder.Property(x => x.LastModifiedUtc);
+        // builder.Property(x => x.LastModifiedBy).HasMaxLength(200);
 
-        builder.Property(x => x.CreatedBy)
-               .HasMaxLength(200);
-
-        builder.Property(x => x.LastModifiedUtc);
-
-        builder.Property(x => x.LastModifiedBy)
-               .HasMaxLength(200);
-
-        // Foreign key to Unit (base unit)
+        // Base Unit relation
         builder.HasOne(x => x.BaseUnit)
                .WithMany()
                .HasForeignKey(x => x.BaseUnitId)
                .OnDelete(DeleteBehavior.Restrict);
 
-        // ⭐ Normal one-to-many (NOT owned anymore)
+        // ⛔️ تم استبدال الـ OwnedRelation بعلاقة عادية
         builder.HasMany(x => x.ItemUnits)
                .WithOne(iu => iu.Item)
                .HasForeignKey(iu => iu.ItemId)
                .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Navigation(x => x.ItemUnits)
-               .AutoInclude(false);
-    }
+        builder.Navigation(x => x.ItemUnits).AutoInclude(false); }
 }
