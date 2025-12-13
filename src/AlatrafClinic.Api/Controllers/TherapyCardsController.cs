@@ -6,9 +6,10 @@ using AlatrafClinic.Application.Features.TherapyCards.Commands.CreateTherapySess
 using AlatrafClinic.Application.Features.TherapyCards.Commands.RenewTherapyCard;
 using AlatrafClinic.Application.Features.TherapyCards.Commands.UpdateTherapyCard;
 using AlatrafClinic.Application.Features.TherapyCards.Dtos;
+using AlatrafClinic.Application.Features.TherapyCards.Queries.GetPaidTherapyCards;
 using AlatrafClinic.Application.Features.TherapyCards.Queries.GetTherapyCardById;
-using AlatrafClinic.Application.Features.TherapyCards.Queries.GetTherapyCardByIdWithSessions;
 using AlatrafClinic.Application.Features.TherapyCards.Queries.GetTherapyCards;
+using AlatrafClinic.Application.Features.TherapyCards.Queries.GetTherapyCardSessions;
 
 using Asp.Versioning;
 
@@ -212,14 +213,14 @@ public sealed class TherapyCardsController(ISender sender) : ApiController
         "Supports searching by patient name or therapy card ID. " +
         "Results are ordered by payment date and support pagination."
     )]
-    [EndpointName("GetPaidTherapyDiagnoses")]
+    [EndpointName("GetPaidTherapyCards")]
     [ApiVersion("1.0")]
-    public async Task<IActionResult> GetPaidTherapyDiagnoses(
-        [FromQuery] GetTherapyDiagnosesRequest request,
+    public async Task<IActionResult> GetPaidTherapyCards(
+        [FromQuery] GetPaidTherapyCardsFilterRequest request,
         [FromQuery] PageRequest pageRequest,
         CancellationToken ct = default)
     {
-        var query = new GetTherapyDiagnosesQuery(
+        var query = new GetPaidTherapyCardsQuery(
             Page: pageRequest.Page,
             PageSize: pageRequest.PageSize,
             SearchTerm: request.SearchTerm,
@@ -235,7 +236,25 @@ public sealed class TherapyCardsController(ISender sender) : ApiController
         );
     }
 
+    [HttpGet("{therapyCardId:int}/sessions")]
+    [ProducesResponseType(typeof(List<SessionDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [EndpointSummary("Retrieves all sessions for a therapy card.")]
+    [EndpointDescription("Returns the sessions for the specified therapy card ID, including session programs, assigned doctors, and medical programs.")]
+    [EndpointName("GetTherapyCardSessions")]
+    [ApiVersion("1.0")]
+    public async Task<IActionResult> GetTherapyCardSessions(
+        [FromRoute] int therapyCardId,
+        CancellationToken ct = default)
+    {
+        var query = new GetTherapyCardSessionsQuery(TherapyCardId: therapyCardId);
 
+        var result = await sender.Send(query, ct);
 
-
+        return result.Match(
+            response => Ok(response),
+            Problem
+        );
+    }
 }
