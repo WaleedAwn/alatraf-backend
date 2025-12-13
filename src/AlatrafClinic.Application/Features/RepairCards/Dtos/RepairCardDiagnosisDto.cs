@@ -10,7 +10,7 @@ public class RepairCardDiagnosisDto
     public int TicketId { get; set; }
     public int PatientId { get; set; }
     public string PatientName { get; set; } = string.Empty;
-    public string Gender {get; set; } = string.Empty;
+    public string Gender { get; set; } = string.Empty;
     public int Age { get; set; }
     public bool IsActive { get; set; }
 
@@ -26,5 +26,6 @@ public class RepairCardDiagnosisDto
     public decimal TotalCost { get; set; }
 
     public List<DiagnosisIndustrialPartDto>? DiagnosisIndustrialParts { get; set; }
-    
+
 }
+

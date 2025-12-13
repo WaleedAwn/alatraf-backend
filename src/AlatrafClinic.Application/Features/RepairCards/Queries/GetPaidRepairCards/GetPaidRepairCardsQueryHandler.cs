@@ -49,8 +49,8 @@ public sealed class GetPaidRepairCardsQueryHandler
             .AsNoTracking();
 
         diagnosesQuery = ApplyFilters(diagnosesQuery);
-        diagnosesQuery = ApplySearch(diagnosesQuery, query);
-        diagnosesQuery = ApplySorting(diagnosesQuery, query);
+        // diagnosesQuery = ApplySearch(diagnosesQuery, query);
+        // diagnosesQuery = ApplySorting(diagnosesQuery, query);
 
         var totalCount = await diagnosesQuery.CountAsync(ct);
 
@@ -83,8 +83,6 @@ public sealed class GetPaidRepairCardsQueryHandler
 
         query = query.Where(d => d.RepairCard != null);
 
-        query = query.Where(d =>
-            d.Payments.Any(p => p.IsCompleted && p.PaymentDate != null));
 
         return query;
     }

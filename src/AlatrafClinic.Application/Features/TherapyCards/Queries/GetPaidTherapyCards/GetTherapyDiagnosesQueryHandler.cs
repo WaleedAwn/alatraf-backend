@@ -74,8 +74,7 @@ public sealed class GetPaidTherapyCardsQueryHandler
 
         query = query.Where(d => d.TherapyCard != null);
 
-        query = query.Where(d =>
-            d.Payments.Any(p => p.IsCompleted && p.PaymentDate != null));
+       
 
         return query;
     }
@@ -113,10 +112,10 @@ public sealed class GetPaidTherapyCardsQueryHandler
         {
             "paymentdate" => isDesc
                 ? query.OrderByDescending(d => d.Payments
-                    .Where(p => p.IsCompleted && p.PaymentDate != null)
+                    .Where(p => p.PaymentDate != null)
                     .Min(p => p.PaymentDate))
                 : query.OrderBy(d => d.Payments
-                    .Where(p => p.IsCompleted && p.PaymentDate != null)
+                    .Where(p =>  p.PaymentDate != null)
                     .Min(p => p.PaymentDate)),
 
             "therapycardid" => isDesc
@@ -128,7 +127,7 @@ public sealed class GetPaidTherapyCardsQueryHandler
                 : query.OrderBy(d => d.Patient!.Person!.FullName),
 
             _ => query.OrderBy(d => d.Payments
-                .Where(p => p.IsCompleted && p.PaymentDate != null)
+                .Where(p =>  p.PaymentDate != null)
                 .Min(p => p.PaymentDate)),
         };
     }
