@@ -57,22 +57,6 @@ public sealed class SectionsController(ISender sender) : ApiController
   }
 
 
-
-    [HttpGet("{sectionId:int}/rooms/{roomId:int}/doctors", Name = "GetDoctorsBySectionRoom")]
-    [ProducesResponseType(typeof(List<GetDoctorDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    [EndpointSummary("Retrieves doctors by section and room.")]
-    [EndpointDescription("Returns a list of doctors associated with the specified section and room.")]
-    [EndpointName("GetDoctorsBySectionRoom")]
-    [MapToApiVersion("1.0")]
-    public async Task<IActionResult> GetDoctorsBySectionRoom(int sectionId, int roomId, CancellationToken ct)
-    {
-        var result = await sender.Send(new GetDoctorsBySectionRoomQuery(sectionId, roomId), ct);
-        return result.Match(
-          response => Ok(response),
-          Problem);
-    }
     [HttpGet("{sectionId:int}/doctors", Name = "GetDoctorsBySection")]
     [ProducesResponseType(typeof(List<GetDoctorDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
